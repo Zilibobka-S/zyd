@@ -5,7 +5,7 @@
 #	echo "Установи yt-dlp и mpv"
 #	exit
 #fi
-set -x
+set 
 
 clear
 echo 'откуда куки брать?'
@@ -22,7 +22,7 @@ clear
 
 
 echo 'Убрать рекламу?'
-sleep 1
+sleep 
 sponsorblock=$(echo -e 'да\nнет' | fzf --height=~10 --border=bold)
 
 
@@ -39,15 +39,19 @@ case $sponsorblock in
 	;;
 esac	
 echo $block
-sleep 1 
+sleep 
 clear
+
+
+
+
 echo выбор качества пока сломан
 #echo 'есть такие качества:'
 #yt-dlp --list-formats "ytsearch:$search"
 #sleep 3
 echo 'Какое качество?'
-sleep 1
-quality=$(echo -e '1440p\n1080p\n720\n360p' | fzf)
+sleep 0
+quality=$(echo -e '1440p\n1080p\n720p\n360p' | fzf  --height=~10 --border=bold)
 
 case $quality in
   1440p)
@@ -56,7 +60,7 @@ case $quality in
   1080p)
 	video="1080"  # 1080p
     ;;
-  720)
+  720p)
 	video="720" #720p
     ;;
   360p)
@@ -84,22 +88,26 @@ clear
 echo а ещё скрипт не умеет выводить нормально длину видео, так как кешируется не всё
 echo короче, это бетка, могу исходники кинуть
 sleep 0 
+
+
 echo Ты хочешь 1 - посмотреть видео из подписок, 2 - посмотреть видео из рекомендаций, 3 - посмотреть видео по поиску 
-read choice 
+choice=$(echo -e 'Видео из подписок\nВидео из рекомендаций\nВидео по поиску' | fzf  --height=~10 --border=bold)
+
 case $choice in
-3) echo "запрос:"
+
+'Видео по поиску') echo "запрос:"
 read search
 clear
 yt-dlp  "ytsearch:$search" $block -f bestvideo+bestaudio -o - | mpv -
 ;;
-2)echo 'сколько видео хочешь?'
+'Видео из рекомендаций')echo 'сколько видео хочешь?'
 read p
-sleep 1
+sleep 0
 for ((i = 1; i <= p; i++)); do
 	yt-dlp :ytrecommend  --mark-watched --cookies-from-browser $cookie --match-filter "!is_live & !watched" --playlist-start $i --force-overwrites --playlist-end $i  -S "+height:$video" -f "bestaudio+bv*[height<=$video]" -o - | mpv -
 done
 ;;
-1)yt-dlp :ytsubscriptions 1 --playlist-end 10  --cookies-from-browser $cookie -f bestvideo+bestaudio -o - | mpv -
+'Видео из подписок') yt-dlp :ytsubscriptions 1 --playlist-end 10  --cookies-from-browser $cookie -f bestvideo+bestaudio -o - | mpv -
 ;; 
 esac 
 #"!is_live & !watched" yt-dlp  "ytsearch:$search" $block -f $video -o - | mpv -

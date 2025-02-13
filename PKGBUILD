@@ -1,6 +1,6 @@
 ﻿# Maintainer: Zilibobka-S
 pkgname=zyd
-pkgver=0.2
+pkgver=0.3
 pkgrel=1
 pkgdesc="Bash script to open youtube videos using terminal. Uses yt-dlp and mpv"
 arch=('any')
